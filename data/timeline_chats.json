@@ -1,0 +1,44 @@
+[
+  {
+    "id": "3941989a-09f0-457c-910e-7ef9ed6992bf",
+    "title": "Chat 1: Исследование, Архитектура и Декомпозиция",
+    "order": 1,
+    "badge": "Architecture & Tasks",
+    "color": "#3b82f6"
+  },
+  {
+    "id": "103ab5c9-fe44-4388-bcbf-43f76966133b",
+    "title": "Chat 2: MVP Ядро, PixiJS и Калибровка (Tasks 01–07)",
+    "order": 2,
+    "badge": "Core Engine & MVP",
+    "color": "#10b981"
+  },
+  {
+    "id": "ab542134-0b8f-46d4-82b1-df886dad9bdd",
+    "title": "Chat 3: UX-фидбек, Геометрия Depth и Редизайн",
+    "order": 3,
+    "badge": "Geometry & Mechanics",
+    "color": "#f59e0b"
+  },
+  {
+    "id": "ec4b518d-47af-4e53-adf8-4d9774234a0b",
+    "title": "Chat 4: Анализ баланса, Dual-Mode & Golden Seeds",
+    "order": 4,
+    "badge": "Balance & Seed Mining",
+    "color": "#8b5cf6"
+  },
+  {
+    "id": "34b6f13f-b704-4e61-9bb9-174737157c16",
+    "title": "Chat 5: Аудит калибровки и Декомпозиция Task 08",
+    "order": 5,
+    "badge": "Task 08 Spec",
+    "color": "#ec4899"
+  },
+  {
+    "id": "3116d3cf-ff14-4ecb-9ad6-976c7f3516f1",
+    "title": "Chat 6: Реализация Task 08, 3 Персоны & Dynamic Seeds",
+    "order": 6,
+    "badge": "Multi-Persona & Polish",
+    "color": "#06b6d4"
+  }
+]
