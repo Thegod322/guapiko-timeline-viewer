@@ -1133,39 +1133,50 @@
 
   function renderSimpleMarkdown(md) {
     if (!md) return '';
-    let html = escapeHtml(md);
+    const lines = md.split('\n');
+    let html = '';
+    let inCode = false;
+    let codeContent = '';
     
-    // Code blocks
-    html = html.replace(/```([a-z]*)
-([\s\S]*?)```/g, (match, lang, code) => {
-      return `<pre><code>${code.trim()}</code></pre>`;
-    });
-    
-    // Headers
-    html = html.replace(/^### (.*$)/gim, '<h3 style="font-size:15px; font-weight:700; color:#93c5fd; margin:16px 0 8px 0; border-bottom:1px solid #1e293b; padding-bottom:4px;">$1</h3>');
-    html = html.replace(/^## (.*$)/gim, '<h2 style="font-size:17px; font-weight:800; color:#38bdf8; margin:20px 0 10px 0; border-bottom:1px solid #334155; padding-bottom:6px;">$1</h2>');
-    html = html.replace(/^# (.*$)/gim, '<h1 style="font-size:20px; font-weight:800; color:#f8fafc; margin:22px 0 12px 0;">$1</h1>');
-    
-    // Bold & Italic
-    html = html.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f1f5f9;">$1</strong>');
-    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    
-    // Inline code
-    html = html.replace(/`([^`]+)`/g, '<code style="font-family:JetBrains Mono,monospace; background:rgba(0,0,0,0.4); color:#f472b6; padding:2px 6px; border-radius:4px; font-size:12px;">$1</code>');
-    
-    // Unordered lists
-    html = html.replace(/^\s*-\s+(.*$)/gim, '<li style="margin-left:20px; margin-bottom:4px;">$1</li>');
-    
-    // Links
-    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color:#60a5fa; text-decoration:underline;">$1</a>');
-    
-    // Paragraphs
-    html = html.replace(/
-
-/g, '<p style="margin-bottom:12px;"></p>');
-    html = html.replace(/
-/g, '<br>');
-    
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i];
+      if (line.startsWith('```')) {
+        if (!inCode) {
+          inCode = true;
+          codeContent = '';
+        } else {
+          inCode = false;
+          html += '<pre><code>' + escapeHtml(codeContent.trim()) + '</code></pre>';
+        }
+        continue;
+      }
+      
+      if (inCode) {
+        codeContent += line + '\n';
+        continue;
+      }
+      
+      let escaped = escapeHtml(line);
+      
+      // Bold formatting
+      escaped = escaped.split('**').map((part, idx) => idx % 2 === 1 ? '<strong style="color:#f1f5f9;">' + part + '</strong>' : part).join('');
+      // Code formatting
+      escaped = escaped.split('`').map((part, idx) => idx % 2 === 1 ? '<code style="font-family:monospace; background:rgba(0,0,0,0.4); color:#f472b6; padding:2px 6px; border-radius:4px; font-size:12px;">' + part + '</code>' : part).join('');
+      
+      if (line.startsWith('### ')) {
+        html += '<h3 style="font-size:15px; font-weight:700; color:#93c5fd; margin:16px 0 6px 0; border-bottom:1px solid #1e293b; padding-bottom:4px;">' + escaped.substring(4) + '</h3>';
+      } else if (line.startsWith('## ')) {
+        html += '<h2 style="font-size:17px; font-weight:800; color:#38bdf8; margin:20px 0 8px 0; border-bottom:1px solid #334155; padding-bottom:6px;">' + escaped.substring(3) + '</h2>';
+      } else if (line.startsWith('# ')) {
+        html += '<h1 style="font-size:20px; font-weight:800; color:#f8fafc; margin:22px 0 10px 0;">' + escaped.substring(2) + '</h1>';
+      } else if (line.trim().startsWith('- ')) {
+        html += '<li style="margin-left:20px; margin-bottom:4px;">' + escaped.replace(/^\s*-\s+/, '') + '</li>';
+      } else if (line.trim() === '') {
+        html += '<div style="height:10px;"></div>';
+      } else {
+        html += '<p style="margin-bottom:8px;">' + escaped + '</p>';
+      }
+    }
     return html;
   }
 
