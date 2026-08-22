@@ -8,21 +8,21 @@
   },
   {
     "id": "103ab5c9-fe44-4388-bcbf-43f76966133b",
-    "title": "Chat 2: MVP Ядро, PixiJS и Калибровка (Tasks 01–07)",
+    "title": "Chat 2: MVP Ядро, PixiJS и Headless Engine",
     "order": 2,
     "badge": "Core Engine & MVP",
     "color": "#10b981"
   },
   {
     "id": "ab542134-0b8f-46d4-82b1-df886dad9bdd",
-    "title": "Chat 3: UX-фидбек, Геометрия Depth и Редизайн",
+    "title": "Chat 3: UX-фидбек, Геометрия Depth и Механики",
     "order": 3,
     "badge": "Geometry & Mechanics",
     "color": "#f59e0b"
   },
   {
     "id": "ec4b518d-47af-4e53-adf8-4d9774234a0b",
-    "title": "Chat 4: Анализ баланса, Dual-Mode & Golden Seeds",
+    "title": "Chat 4: Анализ баланса, Bisection Tuner & Golden Seeds",
     "order": 4,
     "badge": "Balance & Seed Mining",
     "color": "#8b5cf6"
@@ -40,5 +40,19 @@
     "order": 6,
     "badge": "Multi-Persona & Polish",
     "color": "#06b6d4"
+  },
+  {
+    "id": "88d03db3-2728-41db-9597-aad9fd62c8fd",
+    "title": "Chat 7: Деплой на GitHub Pages, Документация & Report",
+    "order": 7,
+    "badge": "Deploy & Documentation",
+    "color": "#f43f5e"
+  },
+  {
+    "id": "a7b63577-2039-43a7-a586-306ef0d60bef",
+    "title": "Chat 8: UI Консолидация, Паритет 1:1, Upload & Hardening",
+    "order": 8,
+    "badge": "UI & Parity Hardening",
+    "color": "#84cc16"
   }
 ]
