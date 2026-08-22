@@ -252,18 +252,27 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      height: 100%;
+      height: 160px;
       position: relative;
       cursor: pointer;
       min-width: 0;
+      padding: 0 1px;
     }
     .hour-column.day-boundary {
-      border-left: 1px dashed rgba(255, 255, 255, 0.18);
+      border-left: 1px dashed rgba(255, 255, 255, 0.2);
       padding-left: 2px;
     }
-    .hour-bar-track {
-      flex: 1;
+    .hour-top-slot {
+      height: 20px;
       width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+    .hour-bar-track {
+      width: 100%;
+      height: 105px;
       background: rgba(255, 255, 255, 0.025);
       border: 1px solid rgba(255, 255, 255, 0.04);
       border-radius: 4px;
@@ -277,7 +286,7 @@
     .hour-column:hover .hour-bar-track {
       background: rgba(255, 255, 255, 0.08);
       border-color: rgba(56, 189, 248, 0.5);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
       transform: scaleY(1.02);
     }
     .hour-bar-fill {
@@ -294,24 +303,43 @@
     .hour-micro-segment {
       width: 100%;
     }
+    .hour-bottom-slot {
+      height: 22px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 4px;
+    }
     .hour-time-label {
       font-size: 8.5px;
       font-family: var(--font-mono);
       color: var(--text-muted);
-      margin-top: 6px;
       white-space: nowrap;
       text-align: center;
-      width: 100%;
-      overflow: hidden;
-      text-overflow: clip;
+      line-height: 1;
+    }
+    .hour-time-label.is-highlight {
+      color: #94a3b8;
+      font-weight: 700;
+    }
+    .hour-tick {
+      width: 2px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 1px;
     }
     .hour-mins-badge {
       font-size: 8.5px;
       font-family: var(--font-mono);
       color: #10b981;
       font-weight: 700;
-      margin-bottom: 2px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 1px 3px;
+      border-radius: 3px;
       white-space: nowrap;
+      line-height: 1;
     }
 
     .session-cards-section {
@@ -1065,12 +1093,32 @@
     `).join('');
 
     // Render Candles Grid
-    grid.style.minWidth = (currentTimeframe === 1) ? '1200px' : '0px';
     let lastDay = '';
-
     grid.innerHTML = currentBins.map((bin, i) => {
       const isDayBoundary = (bin.day_label !== lastDay);
       if (isDayBoundary) lastDay = bin.day_label;
+
+      const dStart = new Date(bin.start_ts);
+      const hourNum = dStart.getHours();
+      let timeLabelHtml = '';
+      
+      if (resHours === 24) {
+        timeLabelHtml = `<span class="hour-time-label is-highlight">${bin.day_label}</span>`;
+      } else if (resHours >= 4) {
+        timeLabelHtml = `<span class="hour-time-label">${dStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+      } else if (resHours === 2) {
+        if (hourNum % 4 === 0 || isDayBoundary) {
+          timeLabelHtml = `<span class="hour-time-label ${isDayBoundary ? 'is-highlight' : ''}">${dStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+        } else {
+          timeLabelHtml = `<span class="hour-tick"></span>`;
+        }
+      } else {
+        if (hourNum % 6 === 0 || isDayBoundary) {
+          timeLabelHtml = `<span class="hour-time-label ${isDayBoundary ? 'is-highlight' : ''}">${dStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+        } else {
+          timeLabelHtml = `<span class="hour-tick"></span>`;
+        }
+      }
 
       const fillPct = bin.active_sec > 0 
         ? Math.max(14, Math.min(100, Math.round((bin.active_sec / (resHours * 3600)) * 100))) 
@@ -1082,12 +1130,19 @@
         </div>
       `).join('');
 
+      const badgeHtml = bin.active_mins > 0 
+        ? `<span class="hour-mins-badge">${bin.active_mins >= 60 ? (Math.round(bin.active_mins / 6) / 10 + 'h') : (bin.active_mins + 'm')}</span>`
+        : '';
+
       return `
         <div class="hour-column ${bin.is_active ? 'is-active' : ''} ${isDayBoundary ? 'day-boundary' : ''}"
              onmouseenter="showTradingTooltip(event, ${i})"
              onmousemove="moveTooltip(event)"
              onmouseleave="hideTooltip()"
              onclick="handleTradingCandleClick(${i})">
+          <div class="hour-top-slot">
+            ${badgeHtml}
+          </div>
           <div class="hour-bar-track">
             <div class="hour-bar-fill" style="height: ${fillPct}%;">
               <div class="hour-bar-segments">
@@ -1095,8 +1150,9 @@
               </div>
             </div>
           </div>
-          <span class="hour-time-label">${bin.time_label}</span>
-          ${bin.active_mins > 0 ? `<span class="hour-mins-badge">${bin.active_mins >= 60 ? (Math.round(bin.active_mins / 6) / 10 + 'h') : (bin.active_mins + 'm')}</span>` : ''}
+          <div class="hour-bottom-slot">
+            ${timeLabelHtml}
+          </div>
         </div>
       `;
     }).join('');
