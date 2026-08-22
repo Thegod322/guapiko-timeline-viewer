@@ -317,7 +317,7 @@ def process_timeline(chat_configs, brain_dir=BRAIN_DIR):
                     gap_category = "sleep"
                     gap_title = "Sleep & Rest Period"
                     is_prompting = False
-                elif gap_sec >= 3600:
+                elif gap_sec >= 5400:
                     gap_type = "short_break"
                     gap_category = "break"
                     gap_title = "Work Pause / Extended Break"
@@ -1414,12 +1414,12 @@ def generate_html_dashboard(data, output_path="timeline_viewer.html"):
       <div class="kpi-subtext">{data['stats']['ai_density_pct']}% net AI model generation & tool work</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Operator Prompting & Analysis (&lt;1h)</div>
+      <div class="kpi-label">Operator Prompting & Analysis (&lt;1.5h)</div>
       <div class="kpi-value prompt-time">{data['stats']['prompting_fmt']}</div>
       <div class="kpi-subtext">Active prompt drafting, specs & in-browser testing</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Offline Breaks &amp; Sleep (≥1h)</div>
+      <div class="kpi-label">Offline Breaks &amp; Sleep (≥1.5h)</div>
       <div class="kpi-value idle-time">{data['stats']['breaks_fmt']}</div>
       <div class="kpi-subtext">Rest periods, sleep &amp; offline intervals</div>
     </div>
@@ -1465,8 +1465,8 @@ def generate_html_dashboard(data, output_path="timeline_viewer.html"):
     <div class="filter-group">
       <button class="filter-btn active" onclick="setFilter('all')">All Events ({len(data['timeline_items'])})</button>
       <button class="filter-btn" onclick="setFilter('turns')">AI Active Work ({data['stats']['total_turns']})</button>
-      <button class="filter-btn" onclick="setFilter('prompting')">Prompting &amp; Analysis (&lt;1h) ({len([i for i in data['timeline_items'] if i['kind'] == 'gap' and i.get('is_prompting')])})</button>
-      <button class="filter-btn" onclick="setFilter('breaks')">Breaks &amp; Sleep (≥1h) ({len([i for i in data['timeline_items'] if i['kind'] == 'gap' and not i.get('is_prompting')])})</button>
+      <button class="filter-btn" onclick="setFilter('prompting')">Prompting &amp; Analysis (&lt;1.5h) ({len([i for i in data['timeline_items'] if i['kind'] == 'gap' and i.get('is_prompting')])})</button>
+      <button class="filter-btn" onclick="setFilter('breaks')">Breaks &amp; Sleep (≥1.5h) ({len([i for i in data['timeline_items'] if i['kind'] == 'gap' and not i.get('is_prompting')])})</button>
     </div>
     <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search prompts (EN/RU), skills, tools, files..." oninput="handleSearch(this.value)">
   </div>
@@ -2045,8 +2045,8 @@ def print_summary(data):
     print(f" ⏱️ Total Project Span (Wall-Clock) : {stats['wall_clock_fmt']} ({stats['first_event']} ➔ {stats['last_event']})")
     print(f" 🔥 Combined Active Co-Work         : {stats['cowork_fmt']} ({stats['cowork_density_pct']}% total density)")
     print(f" ⚡ Net Active AI Execution        : {stats['active_work_fmt']} ({stats['ai_density_pct']}% AI density)")
-    print(f" ✍️ Operator Prompting & Analysis  : {stats['prompting_fmt']} (Active intervals < 1h)")
-    print(f" 🌙 Offline Breaks & Sleep (≥ 1h)  : {stats['breaks_fmt']}")
+    print(f" ✍️ Operator Prompting & Analysis  : {stats['prompting_fmt']} (Active intervals < 1.5h)")
+    print(f" 🌙 Offline Breaks & Sleep (≥ 1.5h)  : {stats['breaks_fmt']}")
     print(f" 💬 Dialogue Iterations (Turns)     : {stats['total_turns']} across {stats['total_chats']} sessions")
     print("-" * 82)
     print(" 📂 DEVELOPMENT SESSIONS:")
